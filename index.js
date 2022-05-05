@@ -87,7 +87,7 @@ server.get('/view/:id', (req, res, next) => {
 server.get("/list", (req, res, next) => {
     runSQLQuery(`select * from Website;`).then(r => res.json({
         success : true,
-        dara : r
+        data : r
     }))
     .catch(err => handleError(err, res));
 });
