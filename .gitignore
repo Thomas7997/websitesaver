@@ -1,0 +1,6 @@
+node_modules/
+public/
+package-lock.json
+.env
+db/config.sql
+db/reset.sql
