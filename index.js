@@ -17,6 +17,25 @@ server.use(express.json());
 server.use(express.static(path.join(__dirname, 'public')));
 server.use(session({ secret: process.env.NODE_LOCAL_SECRET }));
 
+let downloads = [];
+
+function downloadsTasks () {
+    if (downloads.length) {
+        downloads.forEach(w => {
+            // Install website in the public directory
+            exec(`wget ${w.url} -r -O ./public/${w.filename}`, (error, stdout, stderr) => {
+                if (error) console.log(error);
+                else if (stdout || stderr) {
+                    console.log("Download succesful");
+                    // Send a socket later
+                    // ....
+                    downloads = downloads.filter(d => d.filename !== w.filename)
+                }
+            });
+        })
+    }
+}
+
 server.post('/save', (req, res, next) => {
     const {
         url
@@ -35,13 +54,13 @@ server.post('/save', (req, res, next) => {
                 runSQLQuery(`insert into Website(Id_website, url, addedAt) values("${id[0].filename}", "${url}", NOW());`)
                 .then(r => {
                     if (r.affectedRows) {
-                        // Install website in the public directory
-                        exec(`wget ${url} -r -O ./public/${id[0].filename}`, (error, stdout, stderr) => {
-                            if (error) handleError(error, res);
-                            else if (stdout || stderr) res.json({
-                                success: true
-                            });
-                        });                    
+                        downloads.push({
+                            url,
+                            filename : id[0].filename
+                        });
+                        res.json({
+                            success : true
+                        })             
                     }
 
                     else return res.status(400).json({
@@ -108,6 +127,8 @@ server.get("/remove/:id", (req, res, next) => {
     .catch(err => handleError(err, res));
 });
 
+// Tasks
+setInterval(downloadsTasks, 1000);
 
 // catch 404 and forward to error handler
 server.use(function(req, res, next) {

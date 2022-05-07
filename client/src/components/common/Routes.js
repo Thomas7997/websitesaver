@@ -3,12 +3,16 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Pages
 import Index from "../pages/Index";
+import Add from '../pages/Add';
+import View from '../pages/View';
 
 const RoutesComponents = () => {
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<Index/>} />
+                <Route path="/save" element={<Add/>} />
+                <Route path="/website/:title" element={<View/>} />
             </Routes>
         </Router>
     );

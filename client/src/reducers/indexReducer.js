@@ -1,13 +1,17 @@
 import {
     LIST_WEBSITE_SUCCESS,
-    LIST_WEBSITE_FAILURE
+    LIST_WEBSITE_FAILURE,
+    WEBSITE_CONTENT_SUCCESS,
+    WEBSITE_CONTENT_FAILURE
 } from '../actions/types';
 
 const initialState = {
     success : null,
     isLoading : true,
     website : {},
-    websites : []
+    websites : [],
+    content : "",
+    title : "" // URL
 };
 
 export default (state = initialState, action) => {
@@ -25,6 +29,20 @@ export default (state = initialState, action) => {
                 ...state,
                 success : false,
                 websites : []
+            };
+        case WEBSITE_CONTENT_SUCCESS :
+            return {
+                ...state,
+                success : true,
+                content : payload.data,
+                title : payload.url,
+                isLoading : false
+            };
+        case WEBSITE_CONTENT_FAILURE :
+            return {
+                ...state,
+                success : false,
+                isLoading : false
             };
         default :
             return state;
