@@ -12,8 +12,10 @@ function Add({
     const [addedSuccessfully, setAddedSuccessfully] = useState(null);
     useEffect(() => {
         if (!isLoading && success) setAddedSuccessfully(true);   
-        else if (!isLoading) setAddedSuccessfully(false);
-        else if (!isLoading) setErrorMsg("An error occured while trying to add the website.");
+        else if (!isLoading) {
+            setAddedSuccessfully(false);
+            setErrorMsg("An error occured while trying to add the website.");
+        }
     }, [save_website, success, addedSuccessfully])
 
     function onSubmit (e) {

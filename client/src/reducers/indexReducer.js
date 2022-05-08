@@ -2,7 +2,9 @@ import {
     LIST_WEBSITE_SUCCESS,
     LIST_WEBSITE_FAILURE,
     WEBSITE_CONTENT_SUCCESS,
-    WEBSITE_CONTENT_FAILURE
+    WEBSITE_CONTENT_FAILURE,
+    SAVE_WEBSITE_FAILURE,
+    SAVE_WEBSITE_SUCCESS
 } from '../actions/types';
 
 const initialState = {
@@ -29,6 +31,18 @@ export default (state = initialState, action) => {
                 ...state,
                 success : false,
                 websites : []
+            };
+        case SAVE_WEBSITE_SUCCESS :
+            return {
+                ...state,
+                success : true,
+                isLoading : false
+            };
+        case SAVE_WEBSITE_FAILURE :
+            return {
+                ...state,
+                success : false,
+                isLoading : false
             };
         case WEBSITE_CONTENT_SUCCESS :
             return {
