@@ -3,6 +3,9 @@ import { connect } from 'react-redux'
 import {
     list_websites
 } from '../../actions/indexActions';
+import {
+    Link
+} from "react-router-dom"
 
 // Website component
 import Website from '../Website';
@@ -20,6 +23,11 @@ function Index({
 
     return (
         <>
+            <div className="m-2">
+                <Link to="/save">
+                    <button className="btn btn-primary">Ajouter</button>
+                </Link>
+            </div>
             <h1 className="text-center p-1">
                 Websites
             </h1>
@@ -28,7 +36,7 @@ function Index({
                     websites.map((w,index) => (
                         <Website
                             key={index}
-                            link={w.Id_website}
+                            link={`/website/${w.Id_website}`}
                             url={w.url}
                             addedAt={w.addedAt}
                             description="A cool website !"

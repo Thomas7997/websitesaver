@@ -5,14 +5,16 @@ import {
 import { connect } from 'react-redux';
 
 function Add({
-    success, isLoading, save_website, history
+    success, isLoading, save_website
 }) {
     const [url, setUrl] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+    const [addedSuccessfully, setAddedSuccessfully] = useState(null);
     useEffect(() => {
-        if (!isLoading && success) history.push("/");
+        if (!isLoading && success) setAddedSuccessfully(true);   
+        else if (!isLoading) setAddedSuccessfully(false);
         else if (!isLoading) setErrorMsg("An error occured while trying to add the website.");
-    }, [success])
+    }, [save_website, success, addedSuccessfully])
 
     function onSubmit (e) {
         e.preventDefault();
@@ -23,6 +25,13 @@ function Add({
 
     return (
         <>
+            {
+                addedSuccessfully ? (
+                    <div className="alert alert-success" role="alert">
+                        Le site web a été enregistré et est en cours de téléchargement.
+                    </div>
+                ) : null
+            }
             <h1 className="text-center">Saving a website</h1>
             <div className='container m-5'>
                 <form onSubmit={onSubmit}>

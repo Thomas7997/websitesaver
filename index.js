@@ -5,6 +5,7 @@ const session = require('express-session');
 const cors = require('cors');
 const { runSQLQuery, handleError } = require('./config/db');
 const { exec } = require('child_process');
+const axios = require('axios');
 
 require('dotenv').config();
 
@@ -23,7 +24,7 @@ function downloadsTasks () {
     if (downloads.length) {
         downloads.forEach(w => {
             // Install website in the public directory
-            exec(`wget ${w.url} -r -O ./public/${w.filename}`, (error, stdout, stderr) => {
+            exec(`wget -p ${w.url} -O ./public/${w.filename}`, (error, stdout, stderr) => {
                 if (error) console.log(error);
                 else if (stdout || stderr) {
                     console.log("Download succesful");
@@ -56,7 +57,7 @@ server.post('/save', (req, res, next) => {
                     if (r.affectedRows) {
                         downloads.push({
                             url,
-                            filename : id[0].filename
+                            filename : `${id[0].filename}.html`
                         });
                         res.json({
                             success : true
@@ -124,6 +125,36 @@ server.get("/remove/:id", (req, res, next) => {
     runSQLQuery(`delete from Website where Id_website="${id}";`).then(r => res.json({
         success : true
     }))
+    .catch(err => handleError(err, res));
+});
+
+server.get("/content/:id", (req, res, next) => {
+    const {
+        id
+    } = req.params;
+
+    if (!id) return res.status(400).json({
+        success : false,
+        msg : "Missing id."
+    });
+
+    runSQLQuery(`select Id_Website, url from Website where Id_website="${id}";`)
+    .then(rid => {
+        if (rid.length) {
+            axios.get(`http://localhost:6060/${id}.html`)
+            .then(response=> res.json({
+                success: true,
+                content: response.data,
+                title: rid[0].url
+            }))
+            .catch(err => handleError(err, res))
+        }
+        
+        else return res.status(400).json({
+            success : false,
+            msg : "Id not found."
+        });
+    })
     .catch(err => handleError(err, res));
 });
 

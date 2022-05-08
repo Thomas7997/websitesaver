@@ -34,8 +34,8 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 success : true,
-                content : payload.data,
-                title : payload.url,
+                content : payload.content,
+                title : payload.title,
                 isLoading : false
             };
         case WEBSITE_CONTENT_FAILURE :
