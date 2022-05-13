@@ -1,5 +1,5 @@
 node_modules/
-public/
+./public/
 package-lock.json
 .env
 db/config.sql
