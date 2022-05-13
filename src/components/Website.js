@@ -12,7 +12,7 @@ export default function Website({
             <h5 className="card-title">{url}</h5>
             <h6 className="card-subtitle mb-2 text-muted">{addedAt}</h6>
             <p className="card-text">{description}</p>
-            <Link href={link} className="card-link">Visit</Link>
+            <a href={link} className="card-link">Visit</a>
         </div>
     </div>
   );

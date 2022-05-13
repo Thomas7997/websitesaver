@@ -12,10 +12,7 @@ import {
     WEBSITE_CONTENT_SUCCESS
 } from "./types";
 
-const port = "6060";
-const ip = "192.168.1.82";
-
-axios.defaults.baseURL = `http://${ip}:${port}`
+axios.defaults.baseURL = "http://localhost:6060"
 
 export const save_website = url => async dispatch => {
     try {

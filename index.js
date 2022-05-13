@@ -16,7 +16,7 @@ server.use(logger('dev'));
 server.use(express.urlencoded({ extended: false }));
 server.use(express.json());
 server.use(express.static(path.join(__dirname, 'public')));
-server.use(session({ secret: process.env.NODE_LOCAL_SECRET }));
+server.use(session({ secret: process.env.APP_SECRET }));
 
 let downloads = [];
 
@@ -180,6 +180,6 @@ server.use(function(err, req, res, next) {
   }
 });
 
-const port = process.env.NODE_LOCAL_PORT || 5000;
+const port = process.env.APP_PORT || 5000;
 
 server.listen(port, () => console.log(`Server running on port ${port}`));
