@@ -15,7 +15,7 @@ server.use(cors());
 server.use(logger('dev'));
 server.use(express.urlencoded({ extended: false }));
 server.use(express.json());
-server.use(express.static(path.join(__dirname, 'public')));
+server.use(express.static(path.join(__dirname, 'data')));
 server.use(session({ secret: process.env.APP_SECRET }));
 
 let downloads = [];
@@ -24,14 +24,15 @@ function downloadsTasks () {
     if (downloads.length) {
         downloads.forEach(w => {
             // Install website in the public directory
-            exec(`wget -p ${w.url} -O ./public/${w.filename}`, (error, stdout, stderr) => {
+            exec(`wget -p ${w.url} -O ./data/${w.filename}`, (error, stdout, stderr) => {
                 if (error) console.log(error);
                 else if (stdout || stderr) {
                     console.log("Download succesful");
                     // Send a socket later
                     // ....
                     downloads = downloads.filter(d => d.filename !== w.filename)
-                }
+                    console.log(downloads);
+		}
             });
         })
     }
@@ -141,7 +142,7 @@ server.get("/content/:id", (req, res, next) => {
     runSQLQuery(`select Id_Website, url from Website where Id_website="${id}";`)
     .then(rid => {
         if (rid.length) {
-            axios.get(`http://localhost:6060/${id}.html`)
+            axios.get(`http://localhost:${process.env.APP_PORT}/${id}.html`)
             .then(response=> res.json({
                 success: true,
                 content: response.data,
